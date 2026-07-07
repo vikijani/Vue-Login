@@ -9,11 +9,13 @@ export const useUserStore = defineStore("user", {
   actions: {
     setUser(user) {
       this.user = user
+    },
+
+    logout() {
+      this.user = null
     }
   },
 
-  logout() {
-    this.user = null
-  }
+
 
 });

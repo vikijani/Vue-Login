@@ -1,13 +1,41 @@
 <template>
-  <div class="dashboard" >
-    <h2>Welcome</h2>
+  <div class="dashboard" v-if="user">
+    <h2>Welcome, {{ user.email }}</h2>
     <p>This is your dashboard.</p>
-    <button>Logout</button>
+    <button @click="logout">Logout</button>
   </div>
-  <div>
+  <div v-else>
     <p>You are not logged in.</p>
   </div>
 </template>
+
+<script setup>
+import { useRouter } from 'vue-router';
+import { useUserStore } from './stores/userStore';
+import { computed, onMounted } from 'vue';
+
+const useUser = useUserStore();
+const router = useRouter();
+
+const user = computed( () => useUser.user)
+
+onMounted(() =>{
+  const savedUser = JSON.parse(localStorage.getItem('currentUser'));
+
+  if(savedUser){
+    useUser.setUser(savedUser);
+  } else{
+    router.push("/")
+  }
+})
+
+const logout = () => {
+    localStorage.removeItem("currentUser");
+    useUser.logout();
+    router.push("/")
+  }
+
+</script>
 
 <style scoped>
   .dashboard {
